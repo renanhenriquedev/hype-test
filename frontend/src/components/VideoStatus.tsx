@@ -42,11 +42,10 @@ export function VideoStatus({ videoId }: { videoId: string }) {
     }
   }
 
-  function handleDownload() {
-    window.open(
-      `${import.meta.env.VITE_API_URL}/videos/${videoId}/download`,
-      '_blank'
-    );
+  async function handleDownload() {
+    const response = await apiFetch(`/videos/${videoId}/download`);
+    const data = await response.json();
+    window.open(data.url, '_blank');
   }
 
   useEffect(() => {

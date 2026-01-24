@@ -14,8 +14,13 @@ function App() {
   }, []);
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Video Converter</h1>
+    <div className="container">
+      <div className="topbar">
+        <div className="brand">
+          <h1>Video Converter</h1>
+          <span>MP4 720p</span>
+        </div>
+      </div>
       {logged ? <Dashboard /> : <Login onLogin={() => setLogged(true)} />}
     </div>
   );

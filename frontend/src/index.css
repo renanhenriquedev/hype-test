@@ -1,68 +1,130 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg0: #070a12;
+  --bg1: #0b1020;
+  --card: rgba(255, 255, 255, 0.06);
+  --card2: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.10);
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.65);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --primary: rgba(99, 102, 241, 0.40);
+  --primaryBorder: rgba(99, 102, 241, 0.70);
+  --danger: rgba(239, 68, 68, 0.75);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 20% 10%, #202a6a33, transparent),
+              radial-gradient(900px 500px at 90% 30%, #7c3aed22, transparent),
+              linear-gradient(180deg, var(--bg0), var(--bg1));
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
 
-body {
-  margin: 0;
+.container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 28px 16px 48px;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  flex-direction: column;
+  gap: 16px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.brand h1 { margin: 0; font-size: 22px; letter-spacing: 0.2px; }
+.brand span { color: var(--muted); font-size: 13px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 16px;
+}
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+}
+
+h2, h3 { margin: 0 0 10px; }
+p { margin: 8px 0; color: var(--muted); }
+
+.row { display: flex; align-items: center; gap: 10px; }
+.space { justify-content: space-between; }
+
+.input {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.22);
+  color: var(--text);
+  outline: none;
+}
+.label { font-size: 12px; color: var(--muted); margin: 10px 0 6px; display: block; }
+
+.btn {
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: transform .06s ease, background .12s ease;
 }
-button:hover {
-  border-color: #646cff;
+.btn:hover { background: rgba(255,255,255,0.10); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primaryBorder);
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.btn-danger {
+  background: rgba(239, 68, 68, 0.22);
+  border-color: rgba(239, 68, 68, 0.50);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.item {
+  width: 100%;
+  text-align: left;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.18);
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease;
 }
+.item:hover { background: rgba(0,0,0,0.28); }
+.item.active { border-color: var(--primaryBorder); }
+
+.badge {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+}
+.badge.done { border-color: rgba(34,197,94,0.6); }
+.badge.failed { border-color: rgba(239,68,68,0.6); }
+
+.error { color: rgba(255, 120, 120, 0.95); }
+.small { font-size: 12px; color: var(--muted); }
+.ellipsis { min-width: 0; }
+.ellipsis strong { display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

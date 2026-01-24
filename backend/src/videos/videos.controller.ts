@@ -7,6 +7,7 @@ import {
   BadRequestException,
   Get,
   Param,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseAuthGuard } from '../auth/firebase-auth/firebase-auth.guard';
@@ -49,5 +50,11 @@ export class VideosController {
     @Param('videoId') videoId: string,
   ) {
     return this.videos.getDownloadUrl(user.uid, videoId);
+  }
+
+  @Get()
+  @UseGuards(FirebaseAuthGuard)
+  async list(@User() user: RequestUser, @Query('status') status: string) {
+    return this.videos.listVideos(user.uid, status);
   }
 }

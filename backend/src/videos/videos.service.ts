@@ -129,8 +129,6 @@ export class VideosService {
     return { videoId, status: result.status };
   }
 
-
-
   async getDownloadUrl(uid: string, videoId: string) {
     const ref = this.firebase.firestore.collection('videos').doc(videoId);
     const snap = await ref.get();
@@ -167,5 +165,45 @@ export class VideosService {
 
     return { url, expiresAt: expiresAt.toISOString() };
   }
+
+  async listVideos(uid: string, status: string) {
+
+
+    const ALLOWED = new Set(['UPLOADED', 'PROCESSING', 'DONE', 'FAILED']);
+
+
+    if (!ALLOWED.has(status)) {
+      // default seguro
+      // (ou você pode dar BadRequestException)
+      // wanted = 'DONE'
+      throw new Error('Invalid status filter');
+    }
+
+    let q = this.firebase.firestore
+      .collection('videos')
+      .where('uid', '==', uid)
+      .where('status', '==', status)
+      .orderBy('createdAt', 'desc')
+      .limit(50);
+
+    const qs = await q.get();
+
+    const toIso = (v: any) =>
+      v && typeof v.toDate === 'function' ? v.toDate().toISOString() : v ?? null;
+
+    return qs.docs.map((d) => {
+      const data = d.data() as any;
+      return {
+        videoId: d.id,
+        status: data.status,
+        originalFilename: data.originalFilename ?? null,
+        sizeBytes: data.sizeBytes ?? null,
+        createdAt: toIso(data.createdAt),
+        finishedAt: toIso(data.finishedAt),
+        errorMessage: data.errorMessage ?? null,
+      };
+    });
+  }
+
 
 }

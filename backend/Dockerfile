@@ -2,7 +2,7 @@ FROM node:20-slim AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm i
 
 COPY . .
 RUN npm run build
@@ -15,7 +15,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/package*.json ./
-RUN npm ci --omit=dev
+RUN npm i --omit=dev
 
 COPY --from=build /app/dist ./dist
 

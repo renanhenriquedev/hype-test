@@ -34,12 +34,12 @@ jobs:
 
       - name: Run tests inside Docker container
         run: |
-          docker run --rm your-docker-repo/backend:latest npm run test
+          docker run --rm backend/backend:latest npm run test
 
       - name: Build project
         run: |
-          docker run --rm your-docker-repo/backend:latest npm run build
+          docker run --rm backend/backend:latest npm run build
 
       - name: Deploy to production (exemplo com Docker)
         run: |
-          docker run --rm your-docker-repo/backend:latest
+          docker run --rm backend/backend:latest

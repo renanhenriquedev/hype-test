@@ -7,7 +7,7 @@ describe('FirebaseAuthGuard', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FirebaseAuthGuard, FirebaseService],
+      providers: [FirebaseAuthGuard, { provide: FirebaseService, useValue: {} }],
     }).compile();
 
     guard = module.get<FirebaseAuthGuard>(FirebaseAuthGuard);

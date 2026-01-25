@@ -16,11 +16,10 @@ jobs:
           npm ci
           npm run build
       - name: List build directory  
-        run: ls -R frontend/build
+        run: ls -R frontend/dist
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HYPT_TEST_70847 }}
           projectId: hypt-test-70847
           entryPoint: ./frontend
-

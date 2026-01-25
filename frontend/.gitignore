@@ -25,4 +25,6 @@ dist-ssr
 *.sw?
 
 
-/build
+# Build outputs (Vite usa dist/)
+dist/
+build/

@@ -166,23 +166,22 @@ export class VideosService {
     return { url, expiresAt: expiresAt.toISOString() };
   }
 
-  async listVideos(uid: string, status: string) {
-
-
+  async listVideos(uid: string, status?: string) {
     const ALLOWED = new Set(['UPLOADED', 'PROCESSING', 'DONE', 'FAILED']);
 
-
-    if (!ALLOWED.has(status)) {
-      // default seguro
-      // (ou você pode dar BadRequestException)
-      // wanted = 'DONE'
+    if (status && !ALLOWED.has(status)) {
       throw new Error('Invalid status filter');
     }
 
     let q = this.firebase.firestore
       .collection('videos')
-      .where('uid', '==', uid)
-      .where('status', '==', status)
+      .where('uid', '==', uid);
+
+    if (status) {
+      q = q.where('status', '==', status);
+    }
+
+    q = q
       .orderBy('createdAt', 'desc')
       .limit(50);
 

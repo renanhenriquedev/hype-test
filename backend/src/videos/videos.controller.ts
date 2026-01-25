@@ -54,7 +54,7 @@ export class VideosController {
 
   @Get()
   @UseGuards(FirebaseAuthGuard)
-  async list(@User() user: RequestUser, @Query('status') status: string) {
+  async list(@User() user: RequestUser, @Query('status') status?: string) {
     return this.videos.listVideos(user.uid, status);
   }
 }

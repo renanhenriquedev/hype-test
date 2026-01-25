@@ -1,6 +1,49 @@
+# Dependências
 node_modules
-dist
-.git
-.env
-secrets
 npm-debug.log
+yarn-error.log
+
+# Build
+dist
+build
+.next
+
+# Testes
+coverage
+*.test.ts
+*.spec.ts
+test
+
+# Git
+.git
+.gitignore
+.github
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Documentação
+README.md
+docs

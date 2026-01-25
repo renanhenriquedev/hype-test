@@ -9,41 +9,70 @@ on:
       - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Checar o código
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+      
+      - name: Run tests
+        working-directory: ./backend
+        run: npm test
+      
+      - name: Run build
+        working-directory: ./backend
+        run: npm run build
 
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-
+      
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/backend:latest
+          target: production
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/backend:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/backend:buildcache,mode=max
 
-      - name: Build and push Docker image for backend
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Deploy to production
         run: |
-          IMAGE="${{ secrets.DOCKER_USERNAME }}/backend:latest"
-          docker build -t "$IMAGE" -f backend/Dockerfile backend
-          docker push "$IMAGE"
-
-      - name: Run tests inside Docker container
-        run: |
-          IMAGE="${{ secrets.DOCKER_USERNAME }}/backend:latest"
-          docker run --rm "$IMAGE" npm run test
-
-      - name: Build project
-        run: |
-          IMAGE="${{ secrets.DOCKER_USERNAME }}/backend:latest"
-          docker run --rm "$IMAGE" npm run build
-
-      - name: Deploy to production (exemplo com Docker)
-        run: |
-          IMAGE="${{ secrets.DOCKER_USERNAME }}/backend:latest"
-          docker run --rm "$IMAGE"
-
+          echo "Deploy step - adicione aqui seus comandos de deploy"
+          echo "Imagem disponível: ${{ secrets.DOCKER_USERNAME }}/backend:latest"
+          # Exemplo: kubectl set image deployment/backend backend=${{ secrets.DOCKER_USERNAME }}/backend:latest
+          # Ou: ssh user@server "docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest && docker-compose up -d"

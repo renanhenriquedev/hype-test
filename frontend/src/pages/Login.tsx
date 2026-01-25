@@ -2,14 +2,21 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 
-function firebaseErrorMessage(e: any) {
-  const code = e?.code ?? '';
-  if (code.includes('auth/invalid-credential') || code.includes('auth/wrong-password')) return 'E-mail ou senha inválidos.';
-  if (code.includes('auth/user-not-found')) return 'Usuário não encontrado.';
-  if (code.includes('auth/email-already-in-use')) return 'Esse e-mail já está em uso.';
-  if (code.includes('auth/weak-password')) return 'Senha fraca. Use pelo menos 6 caracteres.';
-  if (code.includes('auth/invalid-email')) return 'E-mail inválido.';
-  return e?.message ?? 'Erro ao autenticar.';
+interface FirebaseError extends Error {
+  code: string;
+}
+
+function firebaseErrorMessage(e: unknown): string {
+  if (e instanceof Error && (e as FirebaseError).code) {
+    const code = (e as FirebaseError).code;
+    if (code.includes('auth/invalid-credential') || code.includes('auth/wrong-password')) return 'E-mail ou senha inválidos.';
+    if (code.includes('auth/user-not-found')) return 'Usuário não encontrado.';
+    if (code.includes('auth/email-already-in-use')) return 'Esse e-mail já está em uso.';
+    if (code.includes('auth/weak-password')) return 'Senha fraca. Use pelo menos 6 caracteres.';
+    if (code.includes('auth/invalid-email')) return 'E-mail inválido.';
+    return e.message;
+  }
+  return 'Erro ao autenticar.';
 }
 
 export function Login({ onLogin }: { onLogin: () => void }) {
@@ -32,7 +39,7 @@ export function Login({ onLogin }: { onLogin: () => void }) {
         await createUserWithEmailAndPassword(auth, email, password);
       }
       onLogin();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(firebaseErrorMessage(err));
     } finally {
       setLoading(false);
@@ -44,7 +51,7 @@ export function Login({ onLogin }: { onLogin: () => void }) {
       <div className="card" style={{ maxWidth: 440, margin: '0 auto' }}>
         <div className="stack">
           <div>
-            <h2>{mode === 'login' ? 'EntrarRRR' : 'Criar conta'}</h2>
+            <h2>{mode === 'login' ? 'Entrar' : 'Criar conta'}</h2>
             <p className="muted small" style={{ marginTop: 6 }}>
               Acesse para enviar e converter vídeos para MP4 720p.
             </p>

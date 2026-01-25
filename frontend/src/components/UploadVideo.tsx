@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react';
 import { apiFetch } from '../services/api';
 
+interface VideoUploadResponse {
+  videoId: string;
+}
+
 function formatBytes(bytes: number) {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
   const units = ['B', 'KB', 'MB', 'GB'];
@@ -35,13 +39,17 @@ export function UploadVideo({ onUploaded }: { onUploaded: (videoId: string) => v
         body: formData,
       });
 
-      const data = await response.json();
+      const data: VideoUploadResponse = await response.json();
       onUploaded(data.videoId);
 
       // UX: limpa seleção após sucesso
       setFile(null);
-    } catch (err: any) {
-      setError(err?.message ?? 'Falha no upload');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Falha no upload');
+      }
     } finally {
       setLoading(false);
     }

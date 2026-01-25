@@ -39,8 +39,12 @@ export function VideoStatus({
         status: data.status,
         errorMessage: data.errorMessage ?? null,
       });
-    } catch (err: any) {
-      setError(err?.message ?? 'Falha ao buscar status');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Falha ao buscar status');
+      }
     }
   }
 
@@ -56,8 +60,12 @@ export function VideoStatus({
       onStatusChange?.({ videoId, status: 'PROCESSING', errorMessage: null });
 
       await fetchStatus();
-    } catch (err: any) {
-      setError(err?.message ?? 'Falha ao iniciar conversão');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Falha ao iniciar conversão');
+      }
     } finally {
       setLoadingConvert(false);
     }
@@ -71,8 +79,12 @@ export function VideoStatus({
       const response = await apiFetch(`/videos/${videoId}/download`);
       const data = await response.json();
       window.open(data.url, '_blank');
-    } catch (err: any) {
-      setError(err?.message ?? 'Falha ao gerar link de download');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Falha ao gerar link de download');
+      }
     } finally {
       setLoadingDownload(false);
     }

@@ -209,7 +209,7 @@ useEffect(() => {
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 ### Backend
 | Tecnologia | Versão | Propósito |
@@ -765,13 +765,6 @@ GET /videos?status=DONE
 4. Backend valida o token com Firebase Admin SDK
 5. Se válido, extrai `uid` e `email` do usuário
 6. O decorator `@User()` injeta os dados do usuário nos controllers
-
-### Limitações Conhecidas
-1. **Conversão síncrona** - Processamento pode demorar para vídeos grandes
-2. **Sem retry logic** - Falhas precisam ser reprocessadas manualmente
-3. **Sem cleanup automático** - Arquivos temporários podem acumular
-4. **Single worker** - Uma conversão por vez (pode ser escalado)
-5. **Polling para status** - Frontend consulta status a cada 3 segundos (pode usar WebSockets)
 
 ---
 

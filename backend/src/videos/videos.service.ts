@@ -173,35 +173,73 @@ export class VideosService {
       throw new Error('Invalid status filter');
     }
 
-    let q = this.firebase.firestore
-      .collection('videos')
-      .where('uid', '==', uid);
+    try {
+      let q = this.firebase.firestore
+        .collection('videos')
+        .where('uid', '==', uid);
 
-    if (status) {
-      q = q.where('status', '==', status);
+      if (status) {
+        q = q.where('status', '==', status);
+      }
+
+      q = q
+        .orderBy('createdAt', 'desc')
+        .limit(50);
+
+      const qs = await q.get();
+
+      const toIso = (v: any) =>
+        v && typeof v.toDate === 'function' ? v.toDate().toISOString() : v ?? null;
+
+      return qs.docs.map((d) => {
+        const data = d.data() as any;
+        return {
+          videoId: d.id,
+          status: data.status,
+          originalFilename: data.originalFilename ?? null,
+          sizeBytes: data.sizeBytes ?? null,
+          createdAt: toIso(data.createdAt),
+          finishedAt: toIso(data.finishedAt),
+          errorMessage: data.errorMessage ?? null,
+        };
+      });
+    } catch (error) {
+      if (error.code === 9) {
+        // Fallback sem índice: busca e ordena em memória
+        const q = this.firebase.firestore
+          .collection('videos')
+          .where('uid', '==', uid);
+
+        const qs = await q.get();
+
+        const toIso = (v: any) =>
+          v && typeof v.toDate === 'function' ? v.toDate().toISOString() : v ?? null;
+
+        let docs = qs.docs.map((d) => {
+          const data = d.data() as any;
+          return {
+            videoId: d.id,
+            status: data.status,
+            originalFilename: data.originalFilename ?? null,
+            sizeBytes: data.sizeBytes ?? null,
+            createdAt: toIso(data.createdAt),
+            finishedAt: toIso(data.finishedAt),
+            errorMessage: data.errorMessage ?? null,
+            _sortValue: data.createdAt?.toMillis?.() || 0,
+          };
+        });
+
+        if (status) {
+          docs = docs.filter((d) => d.status === status);
+        }
+
+        docs.sort((a, b) => b._sortValue - a._sortValue);
+
+        return docs.slice(0, 50).map(({ _sortValue, ...rest }) => rest);
+      }
+
+      throw error;
     }
-
-    q = q
-      .orderBy('createdAt', 'desc')
-      .limit(50);
-
-    const qs = await q.get();
-
-    const toIso = (v: any) =>
-      v && typeof v.toDate === 'function' ? v.toDate().toISOString() : v ?? null;
-
-    return qs.docs.map((d) => {
-      const data = d.data() as any;
-      return {
-        videoId: d.id,
-        status: data.status,
-        originalFilename: data.originalFilename ?? null,
-        sizeBytes: data.sizeBytes ?? null,
-        createdAt: toIso(data.createdAt),
-        finishedAt: toIso(data.finishedAt),
-        errorMessage: data.errorMessage ?? null,
-      };
-    });
   }
 
 

@@ -24,7 +24,6 @@ Sistema completo de processamento de vídeos com autenticação Firebase, conver
 - [Testes](#-testes)
 - [API Documentation](#-api-documentation)
 - [Cobertura de Testes](#-cobertura-de-testes)
-- [Melhorias Futuras](#-melhorias-futuras)
 
 ---
 
@@ -733,60 +732,6 @@ GET /videos?status=DONE
 
 ---
 
-## 🎯 Melhorias Futuras
-
-### Backend
-- [ ] **Queue System** - Bull/BullMQ para processamento assíncrono
-- [ ] **WebSockets** - Notificação em tempo real de status
-- [ ] **Batch Processing** - Processar múltiplos vídeos simultaneamente
-- [ ] **Thumbnails** - Gerar thumbnails automaticamente
-- [ ] **Video Metadata** - Extrair duração, resolução, codec
-- [ ] **Progress Tracking** - Percentual de conversão
-- [ ] **Multiple Presets** - 480p, 720p, 1080p, 4K
-- [ ] **Streaming** - HLS/DASH para streaming adaptativo
-- [ ] **CDN Integration** - CloudFront/Cloudflare
-- [ ] **Analytics** - Tracking de uploads, conversões, downloads
-
-### Frontend
-- [ ] **Drag & Drop** - Interface de upload mais intuitiva
-- [ ] **Progress Bar** - Upload e conversão
-- [ ] **Video Preview** - Player integrado
-- [ ] **Bulk Actions** - Selecionar múltiplos vídeos
-- [ ] **Search & Filter** - Busca por nome, data, status
-- [ ] **Pagination** - Lazy loading de vídeos
-- [ ] **Dark Mode** - Tema escuro
-- [ ] **Notifications** - Toast messages
-- [ ] **Error Boundaries** - Better error handling
-- [ ] **PWA** - Progressive Web App
-
-### DevOps
-- [ ] **CI/CD Pipeline** - GitHub Actions completo
-- [ ] **Monitoring** - Sentry, DataDog
-- [ ] **Logging** - Winston, ELK Stack
-- [ ] **Load Balancing** - Nginx, HAProxy
-- [ ] **Auto Scaling** - Kubernetes
-- [ ] **Backup Strategy** - Automated backups
-- [ ] **Health Checks** - Liveness/Readiness probes
-
-### Testes
-- [ ] **Load Tests** - k6, Artillery
-- [ ] **Security Tests** - OWASP ZAP
-- [ ] **Performance Tests** - Lighthouse CI
-- [ ] **Visual Regression** - Percy, Chromatic
-- [ ] **Contract Tests** - Pact
-
----
-
-## 🤝 Contribuindo
-
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/amazing`)
-3. Commit suas mudanças (`git commit -m 'Add amazing feature'`)
-4. Push para a branch (`git push origin feature/amazing`)
-5. Abra um Pull Request
-
----
-
 ## 📝 Notas Técnicas
 
 ### Por que NestJS?
@@ -833,15 +778,6 @@ GET /videos?status=DONE
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins de teste técnico.
-
----
-
-## 📞 Suporte
-
-Para questões sobre o projeto:
-1. Verifique a documentação
-2. Consulte os testes unitários e e2e
-3. Revise os comentários no código
 
 ---
 

@@ -23,7 +23,7 @@ export class VideosService {
     const storageFile = bucket.file(inputPath);
     await storageFile.save(file.buffer, {
       contentType: file.mimetype,
-      resumable: false,
+      resumable: true,
       metadata: {
         firebaseStorageDownloadTokens: randomUUID(),
       },

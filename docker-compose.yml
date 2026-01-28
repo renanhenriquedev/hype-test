@@ -6,6 +6,16 @@ services:
       - "4001:4001"
     env_file:
       - ./backend/.env
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 512M
+    environment:
+      - NODE_ENV=production
 
   frontend:
     build:

@@ -5,18 +5,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: (origin, cb) => {
-      if (!origin) return cb(null, true);
-
-      const ok =
-        /^http:\/\/localhost:\d+$/i.test(origin) ||
-        /^https:\/\/.*\.web\.app$/i.test(origin) ||
-        /^https:\/\/.*\.firebaseapp\.com$/i.test(origin);
-
-      return ok ? cb(null, true) : cb(new Error(`CORS blocked: ${origin}`), false);
-    },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    optionsSuccessStatus: 204,
+    origin: process.env.FRONTEND_URL,
+    allowedHeaders: [
+      'Access-Control-Allow-Headers',
+      'Access-Control-Max-Age',
+      'Authorization',
+      'Content-Type',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   });
 
   const port = Number(process.env.PORT) || 4001;

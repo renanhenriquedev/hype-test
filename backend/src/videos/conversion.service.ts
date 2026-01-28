@@ -56,7 +56,10 @@ export class ConversionService {
       await this.firebase.storage.bucket(outputBucket).upload(outFile, {
         destination: outputPath,
         contentType: 'video/mp4',
-        resumable: false,
+        resumable: true,
+        metadata: {
+          contentType: 'video/mp4',
+        },
       });
 
       await ref.update({
@@ -84,18 +87,22 @@ export class ConversionService {
         '-y',
         '-i',
         inputPath,
+        '-threads',
+        '0',
         '-vf',
         'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2',
         '-c:v',
         'libx264',
         '-preset',
-        'veryfast',
+        'ultrafast',
         '-crf',
-        '23',
+        '28',
         '-c:a',
         'aac',
         '-b:a',
         '128k',
+        '-movflags',
+        '+faststart',
         outputPath,
       ];
 

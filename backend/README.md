@@ -2,10 +2,10 @@
 
 Sistema backend robusto para upload, processamento e conversão de vídeos utilizando NestJS, Firebase e FFmpeg.
 
-[![Tests](https://img.shields.io/badge/tests-37%20passed-success)]()
+[![Tests](https://img.shields.io/badge/tests-37%20passing-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-95.75%25-brightgreen)]()
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)]()
-[![NestJS](https://img.shields.io/badge/NestJS-11.x-red)]()
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)]()
+[![NestJS](https://img.shields.io/badge/NestJS-11.0-red)]()
 
 ## 📋 Índice
 
@@ -274,9 +274,9 @@ cp .env.example .env
 **Criar Projeto Firebase:**
 1. Acesse [Firebase Console](https://console.firebase.google.com)
 2. Crie um novo projeto
-3. Ative **Authentication** → Email/Password
-4. Ative **Firestore Database** → Modo teste
-5. Ative **Storage** → Modo teste
+3. Ative **Authentication** → Método **Email/Password**
+4. Ative **Firestore Database** (modo de teste ou produção)
+5. Ative **Storage** (configure regras de segurança)
 
 **Obter Service Account:**
 1. Project Settings → Service Accounts
@@ -292,7 +292,7 @@ Edite `.env` com suas credenciais:
 PORT=4001
 
 # URL do frontend (CORS)
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:5173
 
 # Firebase Service Account (do JSON baixado)
 FIREBASE_PROJECT_ID=seu-projeto-id
@@ -412,7 +412,7 @@ backend/
 ├── src/
 │   └── **/*.spec.ts          # Unit tests (37 testes)
 └── test/
-    └── app.e2e-spec.ts       # E2E tests (9 testes)
+    └── app.e2e-spec.ts       # E2E tests
 ```
 
 ---
@@ -426,22 +426,9 @@ http://localhost:4001
 
 ### Autenticação
 
-Todos os endpoints (exceto `/health`) requerem header:
+Todos os endpoints requerem header:
 ```
 Authorization: Bearer <firebase-jwt-token>
-```
-
----
-
-### **GET** `/health`
-
-Health check do servidor.
-
-**Response:**
-```json
-{
-  "status": "ok"
-}
 ```
 
 ---

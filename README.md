@@ -2,7 +2,7 @@
 
 Sistema completo de processamento de vídeos com autenticação Firebase, conversão automática usando FFmpeg, e interface React moderna.
 
-[![Tests](https://img.shields.io/badge/tests-46%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-37%20passing-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-95.75%25-brightgreen)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)]()
 [![NestJS](https://img.shields.io/badge/NestJS-11.0-red)]()
@@ -24,7 +24,6 @@ Sistema completo de processamento de vídeos com autenticação Firebase, conver
 - [Testes](#-testes)
 - [API Documentation](#-api-documentation)
 - [Cobertura de Testes](#-cobertura-de-testes)
-- [Deploy](#-deploy)
 - [Melhorias Futuras](#-melhorias-futuras)
 
 ---
@@ -36,14 +35,14 @@ Aplicação full-stack para upload, processamento e gerenciamento de vídeos com
 ### Backend (NestJS)
 - ✅ Upload de vídeos para Firebase Storage
 - ✅ Conversão automática de vídeos para MP4 720p usando FFmpeg
-- ✅ Autenticação via Firebase Auth
+- ✅ Autenticação via Firebase Auth (validação de JWT tokens)
 - ✅ Gerenciamento de status de conversão
 - ✅ Download de vídeos processados via URLs assinadas
 - ✅ API RESTful documentada
 
 ### Frontend (React + Vite)
 - ✅ Interface moderna e responsiva
-- ✅ Autenticação com Google/Email
+- ✅ Autenticação com Email/Senha (login e cadastro)
 - ✅ Upload de vídeos com feedback em tempo real
 - ✅ Dashboard com listagem de vídeos
 - ✅ Monitoramento de status de conversão
@@ -367,9 +366,9 @@ npm install
 
 1. Acesse [Firebase Console](https://console.firebase.google.com/)
 2. Crie um novo projeto
-3. Ative **Authentication** (Google e Email)
-4. Ative **Firestore Database**
-5. Ative **Storage**
+3. Ative **Authentication** → selecione método **Email/Password**
+4. Ative **Firestore Database** (modo de teste ou produção)
+5. Ative **Storage** (configure regras de segurança)
 6. Gere uma **Service Account Key**:
    - Project Settings → Service Accounts
    - Generate New Private Key
@@ -408,9 +407,6 @@ VITE_API_URL=http://localhost:4001
 VITE_FIREBASE_API_KEY=your-api-key
 VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your-project-id
-VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
-VITE_FIREBASE_APP_ID=1:123456789:web:abcdef
 ```
 
 **Onde encontrar essas informações:**
@@ -439,9 +435,10 @@ npm run dev
 ```
 Frontend rodará em: http://localhost:5173
 
-#### Opção 2: Docker Compose (Recomendado)
+#### Opção 2: Docker Compose
 
 ```bash
+# Na raiz do projeto
 # Build e start
 docker-compose up --build
 
@@ -455,7 +452,6 @@ docker-compose down
 Acesse:
 - Frontend: http://localhost:5173
 - Backend: http://localhost:4001
-- API Health: http://localhost:4001/health
 
 ---
 
@@ -496,14 +492,6 @@ Lines        : 96.75%
 ----------------------------------
 ```
 
-### Frontend
-
-```bash
-cd frontend
-npm run lint
-npm run build  # Valida TypeScript
-```
-
 ---
 
 ## 📚 API Documentation
@@ -522,19 +510,6 @@ Authorization: Bearer <firebase-id-token>
 ---
 
 ### Endpoints
-
-#### 🏥 Health Check
-```http
-GET /health
-```
-**Response:**
-```json
-{
-  "status": "ok"
-}
-```
-
----
 
 #### 👤 Get Current User
 ```http
@@ -680,10 +655,11 @@ GET /videos?status=DONE
 
 ## 🎨 Frontend Usage
 
-### Login
+### Login/Cadastro
 1. Acesse http://localhost:5173
-2. Clique em "Login with Google"
-3. Autentique com sua conta Google
+2. Escolha entre "Login" ou "Cadastro"
+3. Digite seu e-mail e senha (mínimo 6 caracteres)
+4. Clique em "Entrar" ou "Criar conta"
 
 ### Upload de Vídeo
 1. Clique em "Choose File"
@@ -692,7 +668,7 @@ GET /videos?status=DONE
 4. Aguarde o upload completar
 
 ### Solicitar Conversão
-1. Localize o vídeo na lista
+1. Localize o vídeo na lista (status: UPLOADED)
 2. Clique em "Convert"
 3. Aguarde o processamento (status muda para PROCESSING)
 4. Status mudará para DONE quando concluído
@@ -725,10 +701,10 @@ GET /videos?status=DONE
 - ✅ **37 Testes Unitários**
   - Controllers (routing e validação)
   - Services (business logic)
-  - Guards (autenticação)
-  - Helpers (utilities)
+  - Guards (autenticação Firebase)
+  - Decorators e helpers
 
-- ✅ **9 Testes E2E**
+- ✅ **Testes E2E disponíveis**
   - Fluxo completo de upload
   - Fluxo de conversão
   - Fluxo de download
@@ -737,55 +713,23 @@ GET /videos?status=DONE
 
 ---
 
-## 🚢 Deploy
-
-### Backend (Railway/Render/Heroku)
-
-1. Configure as variáveis de ambiente no painel
-2. Instale FFmpeg no buildpack
-3. Deploy via Git:
-```bash
-git push production main
-```
-
-### Frontend (Vercel/Netlify)
-
-```bash
-# Build
-npm run build
-
-# Preview
-npm run preview
-
-# Deploy (Vercel)
-vercel --prod
-```
-
-### Docker Production
-
-```bash
-docker-compose -f docker-compose.prod.yml up -d
-```
-
----
-
-## 🔒 Segurança
+## � Segurança
 
 ### Implementado
-- ✅ Firebase Auth token validation
-- ✅ User-scoped resource access
-- ✅ Signed URLs para download
+- ✅ Firebase Auth token validation (JWT)
+- ✅ User-scoped resource access (cada usuário acessa apenas seus vídeos)
+- ✅ Signed URLs para download seguro
 - ✅ CORS configurado
 - ✅ Environment variables para secrets
-- ✅ Input validation via Guards
+- ✅ Input validation via Guards e decorators
 - ✅ File type validation
 
 ### Recomendações Futuras
-- [ ] Rate limiting
-- [ ] File size limits
-- [ ] Virus scanning
-- [ ] API key rotation
-- [ ] Audit logging
+- [ ] Rate limiting (throttle/limite de requisições)
+- [ ] File size limits (validação de tamanho máximo)
+- [ ] Virus scanning (análise de malware)
+- [ ] API key rotation (rotação de chaves)
+- [ ] Audit logging (logs de auditoria)
 
 ---
 
@@ -846,35 +790,43 @@ docker-compose -f docker-compose.prod.yml up -d
 ## 📝 Notas Técnicas
 
 ### Por que NestJS?
-- Arquitetura enterprise-ready
-- TypeScript nativo
-- Dependency Injection
-- Testabilidade excepcional
-- Documentação completa
-- Community support
+- Arquitetura enterprise-ready baseada em módulos
+- TypeScript nativo com strict mode
+- Dependency Injection facilita testes
+- Testabilidade excepcional (96% de cobertura)
+- Decorators para routing, guards e validação
+- Community support e documentação completa
 
 ### Por que Firebase?
-- Autenticação gerenciada
-- Storage escalável
-- Firestore para metadata
+- Autenticação gerenciada (sem necessidade de gerenciar sessões)
+- Storage escalável com URLs assinadas
+- Firestore para metadata em tempo real
 - SDK maduro e confiável
-- Free tier generoso
-- Integração fácil
+- Free tier generoso para MVPs
+- Integração fácil entre frontend e backend
 
 ### Por que FFmpeg?
-- Industry standard
+- Industry standard para processamento de vídeo
 - Altamente configurável
-- Suporte a 100+ formatos
-- Open source
+- Suporte a 100+ formatos de entrada/saída
+- Open source e gratuito
 - Performance excelente
 - Documentação extensa
 
+### Como funciona a autenticação?
+1. Frontend usa Firebase Client SDK para login (email/senha)
+2. Firebase retorna um ID Token (JWT)
+3. Frontend envia o token no header `Authorization: Bearer <token>`
+4. Backend valida o token com Firebase Admin SDK
+5. Se válido, extrai `uid` e `email` do usuário
+6. O decorator `@User()` injeta os dados do usuário nos controllers
+
 ### Limitações Conhecidas
-1. **Conversão síncrona** - Processamento pode demorar
+1. **Conversão síncrona** - Processamento pode demorar para vídeos grandes
 2. **Sem retry logic** - Falhas precisam ser reprocessadas manualmente
-3. **Sem cleanup** - Arquivos temporários podem acumular
-4. **Single worker** - Uma conversão por vez
-5. **Sem streaming** - Download completo necessário
+3. **Sem cleanup automático** - Arquivos temporários podem acumular
+4. **Single worker** - Uma conversão por vez (pode ser escalado)
+5. **Polling para status** - Frontend consulta status a cada 3 segundos (pode usar WebSockets)
 
 ---
 
@@ -884,18 +836,12 @@ Este projeto foi desenvolvido para fins de teste técnico.
 
 ---
 
-## 👨‍💻 Autor
-
-Desenvolvido como teste técnico para vaga de Backend Pleno.
-
----
-
 ## 📞 Suporte
 
 Para questões sobre o projeto:
 1. Verifique a documentação
-2. Consulte os testes
-3. Abra uma issue
+2. Consulte os testes unitários e e2e
+3. Revise os comentários no código
 
 ---
 
